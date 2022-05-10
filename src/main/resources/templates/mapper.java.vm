@@ -1,0 +1,30 @@
+#set($saveSuffix="SaveDTO")
+#set($pageSuffix="PageDTO")
+#set($voSuffix="VO")
+#set($classSuffix=".class")
+#set($entity=$!{table.entityName})
+#set($substringLength=$entity.length() - 6)
+#set($str=$entity.substring(0,$substringLength))
+package ${package.Mapper};
+
+import ${package.Parent}.dto.$!str$!saveSuffix;
+import ${package.Parent}.dto.$!str$!pageSuffix;
+import ${package.Entity}.${entity};
+
+import java.util.List;
+
+/**
+ * Description: $!{table.comment} Mapper 接口
+ * @Author: ${author}
+ * @Date: ${date}
+*/
+#if(${kotlin})
+interface ${table.mapperName} : ${superMapperClass}<${entity}>
+#else
+public interface ${table.mapperName} {
+
+    //void insert($!str$!saveSuffix dto);
+
+    List list($!str$!pageSuffix dto);
+}
+#end

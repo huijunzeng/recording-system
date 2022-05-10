@@ -1,0 +1,61 @@
+#set($saveSuffix="SaveDTO")
+#set($updateSuffix="UpdateDTO")
+#set($pageSuffix="PageDTO")
+#set($querySuffix="QueryDTO")
+#set($voSuffix="VO")
+#set($classSuffix=".class")
+#set($entity=$!{table.entityName})
+#set($substringLength=$entity.length() - 6)
+#set($str=$entity.substring(0,$substringLength))
+package ${package.Service};
+
+import ${package.Parent}.dto.$!str$!saveSuffix;
+import ${package.Parent}.dto.$!str$!updateSuffix;
+import ${package.Parent}.dto.$!str$!pageSuffix;
+import ${package.Entity}.${entity};
+import ${superServiceClassPackage};
+
+/**
+ * Description: $!{table.comment} 服务类
+ * @Author: ${author}
+ * @Date: ${date}
+ */
+#if(${kotlin})
+interface ${table.serviceName} : ${superServiceClass}<${entity}>
+#else
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+
+        /**
+         * 新增
+         * @param dto
+         * @throws Exception
+         */
+        //boolean save($!str$!saveSuffix dto);
+
+        /**
+         * 更新指定信息
+         * @param dto
+         */
+        //boolean update($!str$!updateSuffix dto);
+
+        /**
+         * 根据id获取指定信息
+         * @param id
+         * @return
+         */
+        //$!str$!voSuffix get(Long id);
+
+        /**
+         * 根据条件分页获取信息列表
+         * @param dto
+         * @return
+         */
+        //IPage page($!str$!pageSuffix dto);
+
+        /**
+         * 根据ids删除
+         * @return
+         */
+        //boolean removeByIds(List<Long> ids);
+}
+#end

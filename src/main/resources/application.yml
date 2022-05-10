@@ -1,0 +1,89 @@
+##自定义属性
+swagger:
+    contact:
+        name: ZJH
+        email: 18826233829@163.com
+        url:
+    title: 后台用户管理api
+    description: 后台用户管理接口
+    version: 2.0
+
+##非自定义属性
+server:
+    port: ${SERVER_PORT:9808} # 启动端口
+# actuator
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+        elasticsearch:
+            enabled: false
+spring:
+    application:
+        name: recording-system
+    main:
+        allow-bean-definition-overriding: true
+        allow-circular-references: true #允许循环以来，针对2.6.x版本
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER #针对启动应用时适配swagger报错问题
+    # 数据源mysql配置
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: ${SPRING_DATASOURCE_URL:jdbc:mysql://101.33.205.68:3306/recording_system?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&connectTimeout=30000}
+        username: ${SPRING_DATASOURCE_USERNAME:root}
+        password: ${SPRING_DATASOURCE_PASSWORD:zeng@19940125...}
+        # 数据源hikari连接池配置
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+            minimum-idle: 10
+            idle-timeout: 30000
+            maximum-pool-size: 20
+            auto-commit: true
+            pool-name: HikariCP
+            max-lifetime: 160000
+            connection-timeout: 2000
+            connection-test-query: SELECT 1
+    # redis配置
+    redis:
+        host: ${SPRING_REDIS_HOST:129.211.34.120}
+        port: ${SPRING_REDIS_PORT:6379}
+        password: ${SPRING_REDIS_PASSWORD:zeng@19940125...}
+        # jedis配置
+        jedis:
+            pool:
+                max-active: 20
+                max-idle: 10
+                min-idle: 5
+    security:
+        oauth2:
+            jwt:
+                #jwt的密钥
+                signing-key: :123456
+            #无需鉴权的安全访问url
+            permit-urls: /oauth/**, /actuator/**,/*.html,/favicon.ico,/**/*.html,/**/*.css,/**/*.js,/webjars/springfox-swagger-ui/images/**,/swagger-resources/configuration/*,/swagger-resources,/v3/api-docs,/doc.html
+    jackson:
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+        #default-property-inclusion: non_null
+# mybatis配置
+mybatis-plus:
+    mapper-locations: classpath*:mapper/*Mapper.xml
+    type-aliases-package: com.zjh.reording.system.*.entity
+    configuration:
+        map-underscore-to-camel-case: true
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# graylog日志聚合工具配置参数
+graylog:
+    host: 129.211.34.120
+    port: 12201
+
+# 日志配置
+logging:
+    file:
+        path: /Users/zengjunhui/logs
+    level:
+        root: info
+        com.zjh.recording.system.user: debug

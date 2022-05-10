@@ -1,0 +1,84 @@
+#*
+     截取数据库实体类的-entity后缀，然后针对不同的curd拼接成不同的-DTO对象
+     *#
+#set($saveSuffix="SaveDTO")
+#set($updateSuffix="UpdateDTO")
+#set($pageSuffix="PageDTO")
+#set($querySuffix="QueryDTO")
+#set($removeSuffix="RemoveDTO")
+#set($voSuffix="VO")
+#set($classSuffix=".class")
+#set($entity=$!{table.entityName})
+#set($substringLength=$entity.length() - 6)
+#set($str=$entity.substring(0,$substringLength))
+package ${package.Controller};
+
+import ${package.Parent}.dto.$!str$!saveSuffix;
+import ${package.Parent}.dto.$!str$!updateSuffix;
+import ${package.Parent}.dto.$!str$!pageSuffix;
+import $!{package.Service}.$!{table.serviceName};
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import ${package.Parent}.core.entity.vo.Result;
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * Description: $!{table.comment} api
+ * @Author: ${author}
+ * @Date: ${date}
+ */
+@RestController
+@RequestMapping("/$!str")
+@Api(value = "$!{table.entityName}", tags = {"$!{table.comment} 操作restful接口"})
+@Slf4j
+@Validated
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+        /** 根据需要放开注释
+         @Autowired private $!{table.serviceName} service;
+
+         @ApiOperation(value = "新增", notes = "新增")
+         @PostMapping("/save") public Result<Boolean> save(@Validated @RequestBody $!str$!saveSuffix dto) {
+         return Result.status(service.save(dto));
+         }
+
+         @ApiOperation(value = "修改", notes = "更新指定信息")
+         @PostMapping(("/update")) public Result<Boolean> update(@Validated @RequestBody $!str$!updateSuffix dto) {
+         return Result.status(service.update(dto));
+         }
+
+         @ApiOperation(value = "获取", notes = "根据id获取指定信息")
+         @GetMapping("/{id}") public Result<$!str$!voSuffix> get(@PathVariable Long id) {
+         return Result.success(service.get(id));
+         }
+
+         @ApiOperation(value = "分页搜索", notes = "根据条件分页获取信息列表")
+         @PostMapping("/page") public Result<IPage> page(@RequestBody $!str$!pageSuffix dto) {
+         return Result.success(service.page(dto));
+         }
+
+         @ApiOperation(value = "删除", notes = "根据ids集合删除")
+         @PostMapping("/remove") public Result<Boolean> remove(@RequestBody $!str$!removeSuffix dto) {
+         return Result.status(service.removeByIds(dto.getIds()));
+         }
+         */
+}
+#end

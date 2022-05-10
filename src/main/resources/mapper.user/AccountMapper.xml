@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjh.recording.system.user.mapper.AccountMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.zjh.recording.system.user.entity.AccountEntity">
+                <result column="id" property="id"/>
+                <result column="created_time" property="createdTime"/>
+                <result column="updated_time" property="updatedTime"/>
+                <result column="created_by" property="createdBy"/>
+                <result column="created_username" property="createdUsername"/>
+                <result column="updated_by" property="updatedBy"/>
+                <result column="updated_username" property="updatedUsername"/>
+                <result column="deleted" property="deleted"/>
+                <result column="remark" property="remark"/>
+                <result column="version" property="version"/>
+                    <result column="xhs_id" property="xhsId"/>
+                    <result column="xhs_nickname" property="xhsNickname"/>
+                    <result column="xhs_fans" property="xhsFans"/>
+                    <result column="wechat_id" property="wechatId"/>
+                    <result column="email" property="email"/>
+                    <result column="weibo" property="weibo"/>
+                    <result column="level" property="level"/>
+                    <result column="reply_status" property="replyStatus"/>
+                    <result column="charging_standard" property="chargingStandard"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id,
+                created_time,
+                updated_time,
+                created_by,
+                created_username,
+                updated_by,
+                updated_username,
+                deleted,
+                remark,
+                version,
+            xhs_id, xhs_nickname, xhs_fans, wechat_id, email, weibo, level, reply_status, charging_standard
+        </sql>
+
+
+    <!-- 需要去掉最后一个字段的,逗号-->
+    <!--
+    <insert id="insert" parameterType="com.zjh.recording.system.user.dto.AccountSaveDTO">
+        INSERT INTO account (
+                    id,
+                    xhs_id,
+                    xhs_nickname,
+                    xhs_fans,
+                    wechat_id,
+                    email,
+                    weibo,
+                    level,
+                    reply_status,
+                    charging_standard,
+                    created_time,
+                    updated_time,
+                    created_by,
+                    created_username,
+                    updated_by,
+                    updated_username,
+                    deleted,
+                    remark,
+                    version,
+        ) VALUES (
+                #{id},
+                #{xhsId},
+                #{xhsNickname},
+                #{xhsFans},
+                #{wechatId},
+                #{email},
+                #{weibo},
+                #{level},
+                #{replyStatus},
+                #{chargingStandard},
+                #{createdTime},
+                #{updatedTime},
+                #{createdBy},
+                #{createdUsername},
+                #{updatedBy},
+                #{updatedUsername},
+                #{deleted},
+                #{remark},
+                #{version},
+        )
+    </insert>
+    -->
+
+    <!--
+    <update id="update" parameterType="com.zjh.recording.system.user.dto.AccountUpdateDTO">
+        UPDATE account
+        <set>
+            <if test="xhsId != null and xhsId != ''">
+                xhs_id = #{xhsId},
+            </if>
+            <if test="xhsNickname != null and xhsNickname != ''">
+                xhs_nickname = #{xhsNickname},
+            </if>
+            <if test="xhsFans != null and xhsFans != ''">
+                xhs_fans = #{xhsFans},
+            </if>
+            <if test="wechatId != null and wechatId != ''">
+                wechat_id = #{wechatId},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="weibo != null and weibo != ''">
+                weibo = #{weibo},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="replyStatus != null">
+                reply_status = #{replyStatus},
+            </if>
+            <if test="chargingStandard != null and chargingStandard != ''">
+                charging_standard = #{chargingStandard},
+            </if>
+                    <if test="createdTime != null">
+                        created_time = #{createdTime},
+                    </if>
+                    <if test="updatedTime != null">
+                        updated_time = #{updatedTime},
+                    </if>
+                    <if test="createdBy != null">
+                        created_by = #{createdBy},
+                    </if>
+                    <if test="createdUsername != null and createdUsername != ''">
+                        created_username = #{createdUsername},
+                    </if>
+                    <if test="updatedBy != null">
+                        updated_by = #{updatedBy},
+                    </if>
+                    <if test="updatedUsername != null and updatedUsername != ''">
+                        updated_username = #{updatedUsername},
+                    </if>
+                    <if test="deleted != null">
+                        deleted = #{deleted},
+                    </if>
+                    <if test="remark != null and remark != ''">
+                        remark = #{remark},
+                    </if>
+                    <if test="version != null">
+                        version = #{version}
+                    </if>
+        </set>
+        WHERE 1 = 1
+                AND id = #{id}
+    </update>
+    -->
+
+    <!--
+    <select id="list" resultMap="BaseResultMap" parameterType="com.zjh.recording.system.user.dto.CommonPageListDTO">
+        SELECT * FROM account WHERE 1 = 1
+            <if test="xhsId != null and xhsId != ''">
+                AND xhs_id = #{xhsId}
+            </if>
+            <if test="xhsNickname != null and xhsNickname != ''">
+                AND xhs_nickname = #{xhsNickname}
+            </if>
+            <if test="xhsFans != null and xhsFans != ''">
+                AND xhs_fans = #{xhsFans}
+            </if>
+            <if test="wechatId != null and wechatId != ''">
+                AND wechat_id = #{wechatId}
+            </if>
+            <if test="email != null and email != ''">
+                AND email = #{email}
+            </if>
+            <if test="weibo != null and weibo != ''">
+                AND weibo = #{weibo}
+            </if>
+            <if test="level != null">
+                AND level = #{level}
+            </if>
+            <if test="replyStatus != null">
+                AND reply_status = #{replyStatus}
+            </if>
+            <if test="chargingStandard != null and chargingStandard != ''">
+                AND charging_standard = #{chargingStandard}
+            </if>
+    </select>
+    -->
+</mapper>

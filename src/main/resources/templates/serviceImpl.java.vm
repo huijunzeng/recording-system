@@ -1,0 +1,88 @@
+#set($saveSuffix="SaveDTO")
+#set($updateSuffix="UpdateDTO")
+#set($pageSuffix="PageDTO")
+#set($querySuffix="QueryDTO")
+#set($voSuffix="VO")
+#set($classSuffix=".class")
+#set($entity=$!{table.entityName})
+#set($substringLength=$entity.length() - 6)
+#set($str=$entity.substring(0,$substringLength))
+package ${package.ServiceImpl};
+
+import ${package.Parent}.dto.$!str$!saveSuffix;
+import ${package.Parent}.dto.$!str$!updateSuffix;
+import ${package.Parent}.dto.$!str$!pageSuffix;
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${package.Parent}.vo.$!str$!voSuffix;
+import org.springframework.stereotype.Service;
+import ${package.Parent}.web.enums.LogicEnum;
+import ${package.Parent}.web.util.BeanConverter;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * Description: $!{table.comment} 服务实现类
+ * @Author: ${author}
+ * @Date: ${date}
+ */
+@Service
+@Slf4j
+#if(${kotlin})
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
+
+#else
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+
+        /** 根据需要放开注释
+         @Autowired private ${table.mapperName} mapper;
+
+         @Override
+         @Transactional(rollbackFor = Exception.class)
+         public boolean save($!str$!saveSuffix dto) {
+             $!{table.entityName} entity = BeanConverter.copyForBean($!{table.entityName}::new, dto);
+         return super.save(entity);
+         }
+
+         @Override
+         @Transactional(rollbackFor = Exception.class)
+         public boolean update($!str$!updateSuffix dto) {
+             $!{table.entityName} entity = BeanConverter.copyForBean($!{table.entityName}::new, dto);
+         return super.updateById(entity);
+         }
+
+         @Override public $!str$!voSuffix get(Long id) {
+             $!{table.entityName} entity = super.getById(id);
+             $!str$!voSuffix vo = BeanConverter.copyForBean($!str$!voSuffix::new, entity);
+         return vo;
+         }
+
+         @Override public IPage page($!str$!pageSuffix dto) {
+         Page page = dto.getPage();
+         LambdaQueryWrapper<$!{table.entityName}> queryWrapper = dto.build();
+         queryWrapper.eq(StringUtils.isNotBlank(dto.getCode()), $!{table.entityName}::getCode, dto.getCode());
+         queryWrapper.eq(StringUtils.isNotBlank(dto.getName()), $!{table.entityName}::getName, dto.getName());
+         queryWrapper.eq( $!{table.entityName}::getDeleted, LogicEnum.NO.getCode());
+         queryWrapper.orderByDesc($!{table.entityName}::getCreatedTime);
+         IPage<$!{table.entityName}> iPage = super.page(page, queryWrapper);
+         IPage<$!str$!voSuffix> convertVo = iPage.convert(entity -> BeanConverter.copyForBean($!str$!voSuffix::new, entity));
+         return convertVo;
+         }
+
+         @Override
+         @Transactional(rollbackFor = Exception.class)
+         public boolean removeByIds(List<Long> ids) {
+         return super.removeByIds(ids);
+         }
+         */
+}
+#end

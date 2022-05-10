@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjh.recording.system.user.mapper.DictMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.zjh.recording.system.user.entity.DictEntity">
+                <result column="id" property="id"/>
+                <result column="remark" property="remark"/>
+                <result column="created_time" property="createdTime"/>
+                    <result column="name" property="name"/>
+                    <result column="code" property="code"/>
+                    <result column="value" property="value"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id,
+                remark,
+                created_time,
+            name, code, value
+        </sql>
+
+
+    <!-- 需要去掉最后一个字段的,逗号-->
+    <!--
+    <insert id="insert" parameterType="com.zjh.recording.system.user.dto.DictSaveDTO">
+        INSERT INTO dict (
+                    id,
+                    name,
+                    code,
+                    value,
+                    remark,
+                    created_time,
+        ) VALUES (
+                #{id},
+                #{name},
+                #{code},
+                #{value},
+                #{remark},
+                #{createdTime},
+        )
+    </insert>
+    -->
+
+    <!--
+    <update id="update" parameterType="com.zjh.recording.system.user.dto.DictUpdateDTO">
+        UPDATE dict
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="value != null and value != ''">
+                value = #{value},
+            </if>
+                    <if test="remark != null and remark != ''">
+                        remark = #{remark},
+                    </if>
+                    <if test="createdTime != null">
+                        created_time = #{createdTime}
+                    </if>
+        </set>
+        WHERE 1 = 1
+                AND id = #{id}
+    </update>
+    -->
+
+    <!--
+    <select id="list" resultMap="BaseResultMap" parameterType="com.zjh.recording.system.user.dto.CommonPageListDTO">
+        SELECT * FROM dict WHERE 1 = 1
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
+            <if test="code != null">
+                AND code = #{code}
+            </if>
+            <if test="value != null and value != ''">
+                AND value = #{value}
+            </if>
+    </select>
+    -->
+</mapper>

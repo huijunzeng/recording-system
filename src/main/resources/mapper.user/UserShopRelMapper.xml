@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjh.recording.system.user.mapper.UserShopRelMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.zjh.recording.system.user.entity.UserShopRelEntity">
+                <result column="id" property="id"/>
+                    <result column="user_id" property="userId"/>
+                    <result column="shop_id" property="shopId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id,
+            user_id, shop_id
+        </sql>
+
+
+    <!-- 需要去掉最后一个字段的,逗号-->
+    <!--
+    <insert id="insert" parameterType="com.zjh.recording.system.user.dto.UserShopRelSaveDTO">
+        INSERT INTO user_shop_rel (
+                    id,
+                    user_id,
+                    shop_id,
+        ) VALUES (
+                #{id},
+                #{userId},
+                #{shopId},
+        )
+    </insert>
+    -->
+
+    <!--
+    <update id="update" parameterType="com.zjh.recording.system.user.dto.UserShopRelUpdateDTO">
+        UPDATE user_shop_rel
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId},
+            </if>
+        </set>
+        WHERE 1 = 1
+                AND id = #{id}
+    </update>
+    -->
+
+    <!--
+    <select id="list" resultMap="BaseResultMap" parameterType="com.zjh.recording.system.user.dto.CommonPageListDTO">
+        SELECT * FROM user_shop_rel WHERE 1 = 1
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="shopId != null">
+                AND shop_id = #{shopId}
+            </if>
+    </select>
+    -->
+</mapper>

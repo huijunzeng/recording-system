@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjh.recording.system.user.mapper.NoteLinkMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.zjh.recording.system.user.entity.NoteLinkEntity">
+                <result column="id" property="id"/>
+                <result column="created_time" property="createdTime"/>
+                <result column="updated_time" property="updatedTime"/>
+                <result column="created_by" property="createdBy"/>
+                <result column="created_username" property="createdUsername"/>
+                <result column="updated_by" property="updatedBy"/>
+                <result column="updated_username" property="updatedUsername"/>
+                <result column="deleted" property="deleted"/>
+                <result column="remark" property="remark"/>
+                <result column="version" property="version"/>
+                    <result column="transaction_record_id" property="transactionRecordId"/>
+                    <result column="url" property="url"/>
+                    <result column="likes" property="likes"/>
+                    <result column="platform" property="platform"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id,
+                created_time,
+                updated_time,
+                created_by,
+                created_username,
+                updated_by,
+                updated_username,
+                deleted,
+                remark,
+                version,
+            transaction_record_id, url, likes, platform
+        </sql>
+
+
+    <!-- 需要去掉最后一个字段的,逗号-->
+    <!--
+    <insert id="insert" parameterType="com.zjh.recording.system.user.dto.NoteLinkSaveDTO">
+        INSERT INTO note_link (
+                    id,
+                    transaction_record_id,
+                    url,
+                    likes,
+                    platform,
+                    created_time,
+                    updated_time,
+                    created_by,
+                    created_username,
+                    updated_by,
+                    updated_username,
+                    deleted,
+                    remark,
+                    version,
+        ) VALUES (
+                #{id},
+                #{transactionRecordId},
+                #{url},
+                #{likes},
+                #{platform},
+                #{createdTime},
+                #{updatedTime},
+                #{createdBy},
+                #{createdUsername},
+                #{updatedBy},
+                #{updatedUsername},
+                #{deleted},
+                #{remark},
+                #{version},
+        )
+    </insert>
+    -->
+
+    <!--
+    <update id="update" parameterType="com.zjh.recording.system.user.dto.NoteLinkUpdateDTO">
+        UPDATE note_link
+        <set>
+            <if test="transactionRecordId != null">
+                transaction_record_id = #{transactionRecordId},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
+            <if test="likes != null">
+                likes = #{likes},
+            </if>
+            <if test="platform != null">
+                platform = #{platform},
+            </if>
+                    <if test="createdTime != null">
+                        created_time = #{createdTime},
+                    </if>
+                    <if test="updatedTime != null">
+                        updated_time = #{updatedTime},
+                    </if>
+                    <if test="createdBy != null">
+                        created_by = #{createdBy},
+                    </if>
+                    <if test="createdUsername != null and createdUsername != ''">
+                        created_username = #{createdUsername},
+                    </if>
+                    <if test="updatedBy != null">
+                        updated_by = #{updatedBy},
+                    </if>
+                    <if test="updatedUsername != null and updatedUsername != ''">
+                        updated_username = #{updatedUsername},
+                    </if>
+                    <if test="deleted != null">
+                        deleted = #{deleted},
+                    </if>
+                    <if test="remark != null and remark != ''">
+                        remark = #{remark},
+                    </if>
+                    <if test="version != null">
+                        version = #{version}
+                    </if>
+        </set>
+        WHERE 1 = 1
+                AND id = #{id}
+    </update>
+    -->
+
+    <!--
+    <select id="list" resultMap="BaseResultMap" parameterType="com.zjh.recording.system.user.dto.CommonPageListDTO">
+        SELECT * FROM note_link WHERE 1 = 1
+            <if test="transactionRecordId != null">
+                AND transaction_record_id = #{transactionRecordId}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="platform != null">
+                AND platform = #{platform}
+            </if>
+    </select>
+    -->
+</mapper>

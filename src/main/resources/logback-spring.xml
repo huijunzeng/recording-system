@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="60 seconds">
+
+    <!--
+        注意：
+           logback.xml的加载早于application.yml配置文件，而logback-spring.xml的加载则晚于application.yml配置文件；
+           所以假如在logback.xml中使用<springProperty>标签来获取配置文件中的变量值，会读取不到而报出错误信息，
+           解决办法：重命名为logback-spring.xml
+     -->
+
+    <!-- 读取spring容器中的spring.application.name属性 -->
+    <springProperty scope="context" name="appName" source="spring.application.name" />
+    <!-- 日志文件存放路径 -->
+    <springProperty scope="context" name="logPath" source="logging.file.path" defaultValue="D:/log" />
+    <!-- graylog ip地址 -->
+    <springProperty scope="context" name="graylogHost" source="graylog.host" defaultValue="127.0.0.1" />
+    <!-- graylog 端口 -->
+    <springProperty scope="context" name="graylogPort" source="graylog.port" defaultValue="12201" />
+
+    <!-- 日志输出编码格式化 -->
+    <property name="charset" value="UTF-8"/>
+    <!-- 日志保留时长，设置只保留最近15天的日志 -->
+    <property name="maxHistory" value="15"/>
+    <!--
+        结合Sleuth自定义日志输出格式：
+            %yellow() 指定颜色，需要用括号把内容括起来
+            %d——日志输出时间 标准年月日时分秒格式
+            %thread——输出日志的进程名字
+            %-5level——日志级别，并且使用5个字符靠左对齐
+            ${appName}——spring配置文件的spring.application.name属性值
+            %X{traceId}——Sleuth的traceId为一个请求分配的追踪ID号，用来标识一条请求链路
+            %X{spanId}——Sleuth的spanId表示一个基本的工作单元，一个请求可以包含多个步骤，每个步骤都拥有自己的spanId。一个请求包含一个TraceId，多个SpanId
+            %logger{50}——类路径
+            %M——方法名
+            %line——log在代码中埋点的行数
+            %msg——日志消息
+            %n——平台的换行符
+
+          说明：获取%X{traceId}以及%X{spanId}需要引进Sleuth依赖，并开启spring.sleuth.enabled=true(默认是开启的)；
+               低版本可能分别对应为%X{X-B3-TraceId}以及%X{X-B3-SpanId}，可看jar包源码TraceEnvironmentPostProcessor类的postProcessEnvironment方法；
+
+    -->
+    <property name="consoleLogPattern"
+              value="%d %yellow(%-5level [${appName},%X{traceId},%X{spanId}]) [%thread] %green(%logger{50}.%M) %line : %msg%n"/>
+
+    <!-- 格式化日志输出节点 -->
+    <!-- 自定义控制台打印设置 -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${consoleLogPattern}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!-- 日志系统设置 -->
+    <!-- info级别的日志输出配置 -->
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，
+            所以我们使用下面的策略，可以避免输出 Error 的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤 Error -->
+            <level>ERROR</level>
+            <!-- 匹配到就禁止 -->
+            <onMatch>DENY</onMatch>
+            <!-- 没有匹配到就允许 -->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <!-- 日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <File>${logPath}/info.${appName}.log</File>
+        <!-- 滚动策略，按照时间滚动 TimeBasedRollingPolicy -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间 -->
+            <FileNamePattern>${logPath}/info.${appName}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 日志保留时长 -->
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <!-- 日志输出编码格式化 -->
+        <encoder>
+            <charset>${charset}</charset>
+            <pattern>${consoleLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- error级别的日志输出配置 -->
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>Error</level>
+        </filter>
+        <!-- 日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <!-- 滚动策略，按照时间滚动 TimeBasedRollingPolicy -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间 -->
+            <FileNamePattern>${logPath}/error.${appName}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 日志保留时长 -->
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <!-- 日志输出编码格式化 -->
+        <encoder>
+            <charset>${charset}</charset>
+            <pattern>${consoleLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--发送GELF UDP 到 graylog-->
+    <!--使用第三方组件 https://github.com/osiegmar/logback-gelf -->
+    <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${graylogHost}</graylogHost>
+        <graylogPort>${graylogPort}</graylogPort>
+        <!--以下为可选配置-->
+        <!--GELF块的最大大小（字节）,默认508字节，最大65467字节-->
+        <maxChunkSize>508</maxChunkSize>
+        <!--是否压缩信息-->
+        <useCompression>true</useCompression>
+        <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+            <originHost>localhost</originHost>
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>true</includeMdcData>
+            <includeCallerData>false</includeCallerData>
+            <includeRootCauseData>false</includeRootCauseData>
+            <includeLevelName>false</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%n</pattern>
+            </fullPatternLayout>
+            <numbersAsString>false</numbersAsString>
+            <staticField>app_name:${appName}</staticField>
+            <staticField>os_arch:${os.arch}</staticField>
+            <staticField>os_name:${os.name}</staticField>
+            <staticField>os_version:${os.version}</staticField>
+        </encoder>
+    </appender>
+    <!-- 使用AsyncAppender防止减速 -->
+    <appender name="ASYNC GELF" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="GELF" />
+        <neverBlock>true</neverBlock>
+    </appender>
+
+    <!-- 使用springProfile标签区分不同环境对应的输出 -->
+    <!-- 开发环境配置输出 -->
+    <springProfile name="dev">
+        <!-- 用来指定最基础的日志输出级别，可设置debug，info，warn，error等 -->
+        <root level="info">
+            <appender-ref ref="consoleAppender"/>
+            <appender-ref ref="ASYNC GELF"/>
+        </root>
+    </springProfile>
+
+    <!-- 生产环境配置输出 -->
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="consoleAppender"/>
+            <appender-ref ref="fileInfoLog"/>
+            <appender-ref ref="fileErrorLog"/>
+            <appender-ref ref="ASYNC GELF"/>
+        </root>
+    </springProfile>
+
+</configuration>
